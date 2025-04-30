@@ -33,7 +33,7 @@ app.use("/images",express.static(path.join(__dirname,"/images")))
 app.use(cors(
     {
         //origin:"https://dev-blog1-frontend.onrender.com",
-        origin:"http://localhost:5173",
+        origin: process.env.CLIENT,
         methods:["GET", "POST", "PUT", "DELETE"],
         credentials:true
     }
