@@ -1,6 +1,4 @@
 //COMPLETED
-
-
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { URL } from "../url";
