@@ -1,3 +1,4 @@
+//client/src/pages/Home.jsx
 import axios from "axios"
 import Footer from "../components/Footer"
 import HomePosts from "../components/HomePosts"

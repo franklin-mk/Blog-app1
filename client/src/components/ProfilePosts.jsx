@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { IF } from '../url'
 import { Link } from 'react-router-dom'
+import { getImageUrl } from '../utils/imageUrlHandler'
 
 const ProfilePosts = ({ p }) => {
   // Format date function
@@ -33,7 +33,7 @@ const ProfilePosts = ({ p }) => {
           <div className="md:w-1/3 h-48 md:h-auto relative">
             {p.photo ? (
               <img 
-                src={IF + p.photo} 
+                src={getImageUrl(p.photo)} 
                 alt={p.title} 
                 className="w-full h-full object-cover"
               />

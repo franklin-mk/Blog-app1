@@ -5,10 +5,11 @@ import Navbar from "../components/Navbar"
 import { BiEdit } from 'react-icons/bi'
 import { MdDelete } from 'react-icons/md'
 import axios from "axios"
-import { URL, IF } from "../url"
+import { URL } from "../url"
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../context/UserContext"
 import Loader from "../components/Loader"
+import { getImageUrl } from "../utils/imageUrlHandler"
 
 const PostDetails = () => {
   const postId = useParams().id
@@ -154,7 +155,7 @@ const PostDetails = () => {
               {post.photo && (
                 <div className="w-full overflow-hidden">
                   <img 
-                    src={IF+post.photo} 
+                    src={getImageUrl(post.photo)} 
                     className="w-full h-auto object-cover max-h-[500px]" 
                     alt={post.title || "Post image"}
                   />
