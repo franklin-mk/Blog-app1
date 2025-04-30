@@ -41,22 +41,22 @@ const CreatePost = () => {
           categories:cats
         }
 
+        // In CreatePost.jsx
         if(file){
           const data = new FormData()
           const filename=Date.now()+file.name
           data.append("img",filename)
           data.append("file",file)
           post.photo=filename
-          // console.log(data)
-          //img upload
+          
           try{
             const imgUpload=await axios.post(URL+"/api/upload", data)
-            // console.log(imgUpload.data)
           }
           catch(err){
             console.log(err)
           }
         }
+
         //post upload
         // console.log(post)
         try{

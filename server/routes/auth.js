@@ -1,3 +1,4 @@
+// Fixed auth.js route
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -49,8 +50,8 @@ router.post("/login", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: true, // Always set to true for production
+            sameSite: "none", // Important for cross-domain cookies
             maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
         }).status(200).json(userData);
     } catch (err) {
@@ -63,8 +64,8 @@ router.get("/logout", (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            secure: process.env.NODE_ENV === "production"
+            secure: true, // Always set to true for production
+            sameSite: "none" // Important for cross-domain cookies
         }).status(200).send("User logged out successfully!");
     } catch (err) {
         res.status(500).json("Logout failed.");
@@ -79,7 +80,16 @@ router.get("/refetch", (req, res) => {
 
     jwt.verify(token, process.env.SECRET, {}, async (err, decoded) => {
         if (err) return res.status(403).json("Token is invalid or expired.");
-        res.status(200).json(decoded);
+        
+        // Add more user data if needed
+        try {
+            const user = await User.findById(decoded._id).select("-password");
+            if (!user) return res.status(404).json("User not found");
+            
+            res.status(200).json(decoded);
+        } catch (err) {
+            res.status(500).json("Error fetching user");
+        }
     });
 });
 
