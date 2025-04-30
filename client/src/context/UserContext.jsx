@@ -1,4 +1,4 @@
-// Fixed UserContext.jsx
+// client/src/context/UserContext.jsx
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { URL } from "../url";
