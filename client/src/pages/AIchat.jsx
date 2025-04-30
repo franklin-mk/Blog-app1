@@ -7,7 +7,7 @@ const AIchat = () => {
   return (
     <div>
         <Navbar/>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className='mt-14' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <iframe 
                 src="https://xfince-wildlife-chatbot.hf.space/" 
                 title="Travel Bot"
