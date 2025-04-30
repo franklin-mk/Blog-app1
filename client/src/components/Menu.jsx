@@ -73,7 +73,7 @@ const Menu = () => {
               <span>Write</span>
             </Link>
             
-            <Link to="/myblogs" className="flex items-center px-4 py-3 text-gray-700 hover:bg-indigo-50 transition-colors">
+            <Link to={"/myblogs/"+user._id} className="flex items-center px-4 py-3 text-gray-700 hover:bg-indigo-50 transition-colors">
               <MdDashboard className="w-5 h-5 mr-3 text-indigo-600" />
               <span>My Blogs</span>
             </Link>

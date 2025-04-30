@@ -76,13 +76,13 @@ const Profile = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
-      <div className="flex-grow px-4 sm:px-8 md:px-16 lg:px-[200px] py-8">
+      <div className="flex-grow px-4 sm:px-8 md:px-16 lg:px-[200px] py-8 mt-8">
         {/* Header Section */}
         <div className="mb-8">
-          {/* <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
             Profile
           </h1>
-          <div className="w-20 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mt-2"></div> */}
+          <div className="w-20 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mt-2"></div> 
         </div>
 
         {/* Main Content */}

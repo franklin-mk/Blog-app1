@@ -40,7 +40,7 @@ const MyBlogs = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
-      <div className="flex-grow px-4 sm:px-8 md:px-16 lg:px-[200px] py-8">
+      <div className="flex-grow px-4 sm:px-8 md:px-16 lg:px-[200px] py-8 mt-8">
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
