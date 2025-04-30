@@ -1,4 +1,4 @@
-//USE THIS FOR THE DESIGN AND COLOURS REFERNCES
+//Menu.jsx
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"

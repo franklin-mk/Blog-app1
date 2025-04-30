@@ -1,3 +1,4 @@
+//client/src/pages/PostDetails.jsx
 import { useNavigate, useParams } from "react-router-dom"
 import Comment from "../components/Comment"
 import Footer from "../components/Footer"
@@ -49,7 +50,11 @@ const PostDetails = () => {
     setLoader(true)
     try {
       const res = await axios.get(URL+"/api/comments/post/"+postId)
-      setComments(res.data)
+      // Sort comments by updatedAt date (newest first)
+      const sortedComments = res.data.sort((a, b) => {
+        return new Date(b.updatedAt) - new Date(a.updatedAt)
+      })
+      setComments(sortedComments)
       setLoader(false)
     }
     catch(err) {
@@ -78,9 +83,21 @@ const PostDetails = () => {
         {withCredentials: true}
       )
       
-      // Instead of reloading the page, just update the comments state
-      setComments([...comments, res.data])
+      // Add the new comment at the beginning of the comments array (newest first)
+      setComments([res.data, ...comments])
       setComment("") // Clear comment input
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+  
+  // Handle comment deletion without page reload
+  const handleDeleteComment = async(commentId) => {
+    try {
+      await axios.delete(URL+"/api/comments/"+commentId, {withCredentials:true})
+      // Filter out the deleted comment
+      setComments(comments.filter(c => c._id !== commentId))
     }
     catch(err) {
       console.log(err)
@@ -229,7 +246,12 @@ const PostDetails = () => {
               <div className="space-y-4">
                 {comments.length > 0 ? (
                   comments.map((comment) => (
-                    <Comment key={comment._id} c={comment} post={post} />
+                    <Comment 
+                      key={comment._id} 
+                      c={comment} 
+                      post={post} 
+                      onDelete={handleDeleteComment}
+                    />
                   ))
                 ) : (
                   <div className="text-center p-6 bg-gray-50 rounded-lg">

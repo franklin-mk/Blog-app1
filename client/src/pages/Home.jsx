@@ -20,7 +20,11 @@ const Home = () => {
     setLoader(true)
     try {
       const res = await axios.get(URL + "/api/posts/" + search)
-      setPosts(res.data)
+      // Sort posts by updatedAt date (newest first)
+      const sortedPosts = res.data.sort((a, b) => {
+        return new Date(b.updatedAt) - new Date(a.updatedAt)
+      })
+      setPosts(sortedPosts)
       setNoResults(res.data.length === 0)
       setLoader(false)
     } catch (err) {

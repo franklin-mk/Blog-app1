@@ -1,3 +1,4 @@
+//client/src/components/HomePosts.jsx
 import { getImageUrl } from '../utils/imageUrlHandler';
 
 const HomePosts = ({ post }) => {
@@ -53,6 +54,12 @@ const HomePosts = ({ post }) => {
       
       {/* Content */}
       <div className="flex flex-col w-full md:w-3/5 p-4 md:p-6">
+
+        {/* Title */}
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 line-clamp-2 hover:text-indigo-600 transition-colors">
+            {post.title}
+        </h2>
+
         {/* Categories */}
         {post.categories && post.categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
@@ -67,10 +74,7 @@ const HomePosts = ({ post }) => {
           </div>
         )}
       
-        {/* Title */}
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 line-clamp-2 hover:text-indigo-600 transition-colors">
-          {post.title}
-        </h2>
+        
         
         {/* Meta information */}
         <div className="flex items-center text-sm text-gray-500 mb-3">

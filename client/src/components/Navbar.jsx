@@ -1,9 +1,11 @@
+//Navbar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { BsSearch } from 'react-icons/bs'
 import { FaBars } from 'react-icons/fa'
 import { useContext, useState, useEffect } from "react"
 import Menu from "./Menu"
 import { UserContext } from "../context/UserContext"
+import { CgProfile } from "react-icons/cg"
 
 const Navbar = () => {
   const [prompt, setPrompt] = useState("")
@@ -99,14 +101,24 @@ const Navbar = () => {
             Home
           </Link>
 
-          {user ? (
-            <Link 
-              to="/write" 
-              className="font-medium text-gray-800 hover:text-indigo-600 transition-colors"
-            >
-              Write
-            </Link>
-          ) : (
+          {user && (
+            <>
+              <Link 
+                to="/write" 
+                className="font-medium text-gray-800 hover:text-indigo-600 transition-colors"
+              >
+                Write
+              </Link>
+              <Link 
+                to={`/myblogs/${user._id}`} 
+                className="font-medium text-gray-800 hover:text-indigo-600 transition-colors"
+              >
+                My Blogs
+              </Link>
+            </>
+          )}
+          
+          {!user && (
             <Link 
               to="/login" 
               className="font-medium text-gray-800 hover:text-indigo-600 transition-colors"
@@ -119,10 +131,10 @@ const Navbar = () => {
             <div className="relative">
               <button 
                 onClick={showMenu}
-                className="p-1.5 rounded-full border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors"
-                aria-label="Menu"
+                className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg border-2 border-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors"
+                aria-label="User Menu"
               >
-                <FaBars size={16} />
+                {user.username ? user.username[0].toUpperCase() : "U"}
               </button>
               {menu && <Menu />}
             </div>
