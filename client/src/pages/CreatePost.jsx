@@ -1,4 +1,3 @@
-//client/src/pages/CreatePost.jsx
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import {ImCross} from 'react-icons/im'
@@ -9,104 +8,226 @@ import axios from 'axios'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 const CreatePost = () => {
-    const [title,setTitle]=useState("")
-    const [desc,setDesc]=useState("")
-    const [file,setFile]=useState(null)
-    const {user}=useContext(UserContext)
-    const [cat,setCat]=useState("")
-    const [cats,setCats]=useState([])
+    const [title, setTitle] = useState("")
+    const [desc, setDesc] = useState("")
+    const [file, setFile] = useState(null)
+    const {user} = useContext(UserContext)
+    const [cat, setCat] = useState("")
+    const [cats, setCats] = useState([])
+    const [preview, setPreview] = useState(null)
 
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
-    const deleteCategory=(i)=>{
-       let updatedCats=[...cats]
-       updatedCats.splice(i)
+    const deleteCategory = (i) => {
+       let updatedCats = [...cats]
+       updatedCats.splice(i, 1) // Fixed to remove just one item
        setCats(updatedCats)
     }
 
-    const addCategory=()=>{
-        let updatedCats=[...cats]
+    const addCategory = () => {
+        if (!cat.trim()) return // Prevent adding empty categories
+        
+        // Prevent duplicate categories
+        if (cats.includes(cat)) return
+        
+        let updatedCats = [...cats]
         updatedCats.push(cat)
         setCat("")
         setCats(updatedCats)
     }
 
-    const handleCreate=async (e)=>{
+    const handleFileChange = (e) => {
+      const selectedFile = e.target.files[0]
+      setFile(selectedFile)
+      
+      // Create preview for image
+      if (selectedFile) {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setPreview(reader.result)
+        }
+        reader.readAsDataURL(selectedFile)
+      } else {
+        setPreview(null)
+      }
+    }
+
+    const handleCreate = async (e) => {
         e.preventDefault()
-        const post={
+        if (!title.trim() || !desc.trim()) {
+          alert("Title and description are required!")
+          return
+        }
+        
+        const post = {
           title,
           desc,
-          username:user.username,
-          userId:user._id,
-          categories:cats
+          username: user.username,
+          userId: user._id,
+          categories: cats
         }
 
-        // In CreatePost.jsx
-        if(file){
+        if (file) {
           const data = new FormData()
-          const filename=Date.now()+file.name
-          data.append("img",filename)
-          data.append("file",file)
-          post.photo=filename
+          const filename = Date.now() + file.name
+          data.append("img", filename)
+          data.append("file", file)
+          post.photo = filename
           
-          try{
-            const imgUpload=await axios.post(URL+"/api/upload", data)
+          try {
+            const imgUpload = await axios.post(URL+"/api/upload", data)
           }
-          catch(err){
+          catch(err) {
             console.log(err)
           }
         }
 
-        //post upload
-        // console.log(post)
-        try{
-          const res=await axios.post(URL+"/api/posts/create",post,{withCredentials:true})
+        try {
+          const res = await axios.post(URL+"/api/posts/create", post, {withCredentials: true})
           navigate("/posts/post/"+res.data._id)
-          // console.log(res.data)
-
         }
-        catch(err){
+        catch(err) {
           console.log(err)
         }
     }
 
-
-
-  return (
-    <div>
+    return (
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-white to-blue-50">
         <Navbar/>
-        <div className='px-6 md:px-[200px] mt-8'>
-        <h1 className='font-bold md:text-2xl text-xl '>Create a post</h1>
-        <form className='w-full flex flex-col space-y-4 md:space-y-8 mt-4'>
-          <input onChange={(e)=>setTitle(e.target.value)} type="text" placeholder='Enter post title' className=' border-2 rounded-md border-solid border-slate-500 px-4 py-2 outline-none'/>
-          <textarea onChange={(e)=>setDesc(e.target.value)} rows={10} cols={20} className='border-2 rounded-md border-solid border-slate-500 px-4 py-2 outline-none' placeholder='Enter post description'/>
-          <input  onChange={(e)=>setFile(e.target.files[0])} type="file"  className='px-4 py-1 rounded-md border-slate-300 border-solid border-2'/>
-          <div className='flex flex-col'>
-            <div className='flex items-center space-x-4 md:space-x-8'>
-                <input value={cat} onChange={(e)=>setCat(e.target.value)} className='px-4 py-2 outline-none border-2 rounded-md border-solid border-slate-300' placeholder='Enter post category' type="text"/>
-                <div onClick={addCategory} className='bg-black rounded-md text-white px-4 py-2 font-semibold cursor-pointer'>Add</div>
-            </div>
-
-            {/* categories */}
-            <div className='flex px-4 mt-3'>
-            {cats?.map((c,i)=>(
-                <div key={i} className='flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md'>
-                <p>{c}</p>
-                <p onClick={()=>deleteCategory(i)} className='text-white bg-black rounded-full cursor-pointer p-1 text-sm'><ImCross/></p>
-            </div>
-            ))}
-            
-            
+        
+        {/* Content with top padding to account for fixed navbar */}
+        <div className="pt-20 flex-grow">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 pb-2 border-b border-gray-100">
+                Create a New Post
+              </h1>
+              
+              <form className="space-y-6">
+                {/* Title Input */}
+                <div className="space-y-2">
+                  <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                    Post Title
+                  </label>
+                  <input 
+                    id="title"
+                    type="text" 
+                    placeholder="Enter an engaging title" 
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)} 
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  />
+                </div>
+                
+                {/* Content Textarea */}
+                <div className="space-y-2">
+                  <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                    Post Content
+                  </label>
+                  <textarea 
+                    id="content"
+                    rows={12} 
+                    placeholder="Write your post content here..." 
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  ></textarea>
+                </div>
+                
+                {/* File Upload */}
+                <div className="space-y-2">
+                  <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                    Featured Image
+                  </label>
+                  <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 transition-colors hover:border-indigo-500">
+                    <input 
+                      id="image"
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden" 
+                    />
+                    <label htmlFor="image" className="cursor-pointer text-center">
+                      {preview ? (
+                        <div className="space-y-4">
+                          <img src={preview} alt="Preview" className="mx-auto max-h-48 object-contain rounded-md" />
+                          <p className="text-sm text-indigo-600">Click to change image</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <p className="text-sm text-gray-600">Click to upload an image</p>
+                          <p className="text-xs text-gray-500">(Optional)</p>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </div>
+                
+                {/* Categories */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Categories
+                  </label>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <input 
+                      type="text"
+                      placeholder="Enter a category" 
+                      value={cat}
+                      onChange={(e) => setCat(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCategory())}
+                      className="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    <button 
+                      type="button"
+                      onClick={addCategory}
+                      className="flex-shrink-0 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      Add Category
+                    </button>
+                  </div>
+                  
+                  {/* Category Tags */}
+                  {cats.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {cats.map((category, index) => (
+                        <div 
+                          key={index} 
+                          className="flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                        >
+                          <span>{category}</span>
+                          <button
+                            type="button"
+                            onClick={() => deleteCategory(index)}
+                            className="ml-2 text-indigo-600 hover:text-indigo-800 focus:outline-none"
+                          >
+                            <ImCross size={8} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Submit Button */}
+                <div className="flex justify-center pt-4 border-t border-gray-100">
+                  <button 
+                    type="button"
+                    onClick={handleCreate}
+                    className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    Publish Post
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-          
-          <button onClick={handleCreate} className='rounded-xl bg-black w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl text-lg'>Create</button>
-        </form>
-
         </div>
+        
         <Footer/>
-    </div>
-  )
+      </div>
+    )
 }
 
 export default CreatePost
