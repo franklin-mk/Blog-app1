@@ -1,4 +1,4 @@
-//COMPLETED
+//server/index.js
 const express=require('express')
 const app=express()
 const mongoose=require('mongoose')
@@ -13,7 +13,6 @@ const postRoute=require('./routes/posts')
 const commentRoute=require('./routes/comments')
 
 //database connection
-//
 const connectDB=async()=>{
     try{
         await mongoose.connect(process.env.MONGO_URL)

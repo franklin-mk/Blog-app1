@@ -1,4 +1,4 @@
-//COMPLETED
+//server/verifyToken
 const jwt=require('jsonwebtoken')
 
 const verifyToken=(req,res,next)=>{
